@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Competitor Post Analyzer</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  margin: 0;
+  padding: 40px;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+h1 { margin-bottom: 10px; }
+.description { color: #555; margin-bottom: 25px; }
+.form-group { margin-bottom: 20px; }
+label { font-weight: bold; display: block; margin-bottom: 6px; }
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+input[type="checkbox"] { width: auto; }
+small { color: #777; display: block; margin-top: 4px; }
+button {
+  background-color: #1a73e8;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+button:hover { background-color: #1558b0; }
+.status-message {
+  margin-top: 15px;
+  font-weight: bold;
+}
+.info-section {
+  margin-top: 40px;
+  padding: 20px;
+  background: #f9fafc;
+  border-radius: 8px;
+  border: 1px solid #e3e6ea;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Competitor Post Analyzer</h1>
+  <p class="description">
+    Analyze competitor Facebook pages using AI-powered content intelligence.
+  </p>
+
+  <form id="analysisForm">
+
+    <div class="form-group">
+      <label for="pageUrl">Facebook Page URL *</label>
+      <input type="url" id="pageUrl" required 
+      placeholder="https://www.facebook.com/YourCompetitorPage">
+      <small>Enter a valid public Facebook page URL.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="resultsLimit">Number of Posts to Analyze *</label>
+      <input type="number" id="resultsLimit" min="1" max="20" value="5" required>
+      <small>Select between 1 and 20 recent posts.</small>
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="captionText">
+        Include Full Caption Text
+      </label>
+      <small>Enable deep copywriting analysis.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="analysisMode">Analysis Mode</label>
+      <select id="analysisMode">
+        <option value="basic">Basic</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+
+    <button type="submit">Start Analysis</button>
+    <div class="status-message" id="statusMessage"></div>
+
+  </form>
+
+  <div class="info-section">
+    <h2>How It Works</h2>
+    <ul>
+      <li>Collect recent posts from the provided page.</li>
+      <li>Extract captions and metadata.</li>
+      <li>Apply AI copywriting analysis.</li>
+      <li>Return structured insights.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+document.getElementById("analysisForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const statusMessage = document.getElementById("statusMessage");
+  statusMessage.innerText = "Processing...";
+
+  const pageUrl = document.getElementById("pageUrl").value;
+  const resultsLimit = parseInt(document.getElementById("resultsLimit").value);
+  const captionText = document.getElementById("captionText").checked;
+  const analysisMode = document.getElementById("analysisMode").value;
+
+  const payload = {
+    captionText: captionText,
+    resultsLimit: resultsLimit,
+    analysisMode: analysisMode,
+    startUrls: [
+      { url: pageUrl }
+    ]
+  };
+
+  try {
+    const response = await fetch("https://n8n.srv1156892.hstgr.cloud/webhook/8428b75f-319f-491a-b690-04eff3fec6ac", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      statusMessage.innerText = "✅ Analysis request sent successfully.";
+    } else {
+      statusMessage.innerText = "❌ Failed to send request.";
+    }
+
+  } catch (error) {
+    statusMessage.innerText = "❌ Error connecting to server.";
+  }
+});
+</script>
+
+</body>
+</html>
